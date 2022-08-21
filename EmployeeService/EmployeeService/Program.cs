@@ -1,3 +1,6 @@
+using EmployeeService.Services;
+using EmployeeService.Services.Impl;
+
 namespace EmployeeService
 {
     public class Program
@@ -7,6 +10,11 @@ namespace EmployeeService
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IEmployeeTypeRepository, EmployeeTypeRepository>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
