@@ -1,4 +1,6 @@
-﻿using EmployeeService.Models.Options;
+﻿using EmployeeService.Data;
+using EmployeeService.Models;
+using EmployeeService.Models.Options;
 using EmployeeService.Models.Requests;
 using EmployeeService.Services;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +15,7 @@ namespace EmployeeService.Controllers
     {
         #region Services
 
+        private readonly ILogger<EmployeeController> _logger;
         private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IEmployeeRepository _employeeRepository;
 
@@ -20,10 +23,11 @@ namespace EmployeeService.Controllers
 
         #region Constructors
 
-        public EmployeeController(IOptions<LoggerOptions> loggerOptions, IEmployeeRepository employeeRepository)
+        public EmployeeController(ILogger<EmployeeController> logger ,IOptions<LoggerOptions> loggerOptions, IEmployeeRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
             _loggerOptions = loggerOptions;
+            _logger = logger;
         }
 
         #endregion
@@ -33,7 +37,8 @@ namespace EmployeeService.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreateEmployeeRequest request)
         {
-            return Ok(_employeeRepository.Create(new Models.Employee
+            _logger.LogInformation("Сотрудник создан");
+            return Ok(_employeeRepository.Create(new Employee
             {
                 DepartmentId = request.DepartmentId,
                 EmployeeTypeId = request.EmployeeTypeId,
@@ -45,15 +50,38 @@ namespace EmployeeService.Controllers
         }
 
         [HttpGet("get/all")]
-        public IActionResult GetAllEmployees()
+        public ActionResult<List<EmployeeDto>> GetAllEmployees()
         {
-            return Ok(_employeeRepository.GetAll());
+            _logger.LogInformation("Получены все сотрудники");
+            return Ok(_employeeRepository.GetAll().Select(employee => new EmployeeDto
+            {
+                Id = employee.Id,
+                DepartmentId = employee.DepartmentId,
+                EmployeeTypeId = employee.EmployeeTypeId,
+                FirstName = employee.FirstName,
+                Patronymic = employee.Patronymic,
+                Salary = employee.Salary,
+                Surname = employee.Surname
+            }).ToList());
         }
 
         [HttpGet("get/{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public ActionResult<EmployeeDto> GetById([FromRoute] int id)
         {
-            return Ok(_employeeRepository.GetById(id));
+            var employee = _employeeRepository.GetById(id);
+            _logger.LogInformation($"Получен сотрудник №: {id}");
+            return Ok(new EmployeeDto
+            {
+                Id = employee.Id,
+                DepartmentId = employee.DepartmentId,
+                EmployeeTypeId = employee.EmployeeTypeId,
+                FirstName = employee.FirstName,
+                Patronymic = employee.Patronymic,
+                Salary = employee.Salary,
+                Surname = employee.Surname
+            });
+
+            
         }
 
         #endregion

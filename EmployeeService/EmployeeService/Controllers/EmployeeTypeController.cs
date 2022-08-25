@@ -1,4 +1,6 @@
-﻿using EmployeeService.Models.Options;
+﻿using EmployeeService.Data;
+using EmployeeService.Models;
+using EmployeeService.Models.Options;
 using EmployeeService.Models.Requests;
 using EmployeeService.Services;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +15,7 @@ namespace EmployeeService.Controllers
     {
         #region Services
 
+        private readonly ILogger<EmployeeTypeController> _logger;
         private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IEmployeeTypeRepository _employeeTypeRepository;
 
@@ -20,10 +23,11 @@ namespace EmployeeService.Controllers
 
         #region Constructors
 
-        EmployeeTypeController(IOptions<LoggerOptions> loggerOptions, IEmployeeTypeRepository employeeTypeRepository)
+        public EmployeeTypeController(ILogger<EmployeeTypeController> logger ,IOptions<LoggerOptions> loggerOptions, IEmployeeTypeRepository employeeTypeRepository)
         {
             _employeeTypeRepository = employeeTypeRepository;
             _loggerOptions = loggerOptions;
+            _logger = logger;
         }
 
         #endregion
@@ -33,22 +37,34 @@ namespace EmployeeService.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreateEmployeeTypeRequest request)
         {
-            return Ok(_employeeTypeRepository.Create(new Models.EmployeeType
+            _logger.LogInformation("Тип сотрудника создан");
+            return Ok(_employeeTypeRepository.Create(new EmployeeType
             {
                 Description = request.Description
             }));
         }
 
         [HttpGet("get/all")]
-        public IActionResult GetAllEmployeeType()
+        public ActionResult<List<EmployeeTypeDto>> GetAllEmployeeType()
         {
-            return Ok(_employeeTypeRepository.GetAll());
+            _logger.LogInformation("Получены все типы сотрудников");
+            return Ok(_employeeTypeRepository.GetAll().Select(employeeType => new EmployeeTypeDto
+            {
+                Id = employeeType.Id,
+                Description = employeeType.Description
+            }).ToList());
         }
 
         [HttpGet("get/{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public ActionResult<EmployeeTypeDto> GetById([FromRoute] int id)
         {
-            return Ok(_employeeTypeRepository.GetById(id));
+            var employeeType = _employeeTypeRepository.GetById(id);
+            _logger.LogInformation($"Получен тип сотрудника №: {id}");
+            return Ok(new EmployeeTypeDto
+            {
+                Id = employeeType.Id,
+                Description = employeeType.Description
+            });
         }
 
         #endregion

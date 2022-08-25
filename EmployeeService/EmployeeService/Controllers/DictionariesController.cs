@@ -12,6 +12,7 @@ namespace EmployeeService.Controllers
     {
         #region Services
 
+        private readonly ILogger<DictionariesController> _logger;
         private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IEmployeeTypeRepository _employeeTypeRepository;
 
@@ -19,10 +20,11 @@ namespace EmployeeService.Controllers
 
         #region Constructors
 
-        public DictionariesController(IOptions<LoggerOptions> loggerOptions, IEmployeeTypeRepository employeeTypeRepository)
+        public DictionariesController(ILogger<DictionariesController> logger, IOptions<LoggerOptions> loggerOptions, IEmployeeTypeRepository employeeTypeRepository)
         {
             _employeeTypeRepository = employeeTypeRepository;
             _loggerOptions = loggerOptions;
+            _logger = logger;
         }
 
         #endregion
@@ -32,6 +34,7 @@ namespace EmployeeService.Controllers
         [HttpGet("employee-types/all")]
         public IActionResult GetAllEmployeeTypes()
         {
+            _logger.LogInformation("Получены все записи");
             return Ok(_employeeTypeRepository.GetAll());
         }
 

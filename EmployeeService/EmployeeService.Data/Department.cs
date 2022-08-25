@@ -1,6 +1,6 @@
-﻿namespace EmployeeService.Models
+﻿namespace EmployeeService.Data
 {
-    public class EmployeeType
+    public class Department
     {
         public int Id { get; set; }
         public string Description { get; set; }

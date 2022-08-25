@@ -1,4 +1,6 @@
-﻿using EmployeeService.Models.Options;
+﻿using EmployeeService.Data;
+using EmployeeService.Models;
+using EmployeeService.Models.Options;
 using EmployeeService.Models.Requests;
 using EmployeeService.Services;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +15,7 @@ namespace EmployeeService.Controllers
     {
         #region Services
 
+        private readonly ILogger<DepartmentController> _logger;
         private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IDepartmentRepository _departmentRepository;
 
@@ -20,10 +23,11 @@ namespace EmployeeService.Controllers
 
         #region Constructors
 
-        public DepartmentController(IOptions<LoggerOptions> loggerOptions, IDepartmentRepository departmentRepository)
+        public DepartmentController(ILogger<DepartmentController> logger, IOptions<LoggerOptions> loggerOptions, IDepartmentRepository departmentRepository)
         {
             _departmentRepository = departmentRepository;
             _loggerOptions = loggerOptions;
+            _logger = logger;
         }
 
         #endregion
@@ -33,22 +37,35 @@ namespace EmployeeService.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreateDepartmentRequest request)
         {
-            return Ok(_departmentRepository.Create(new Models.Department
+            _logger.LogInformation("Департамент создан");
+            return Ok(_departmentRepository.Create(new Department
             {
                 Description = request.Description
             }));
         }
 
         [HttpGet("get/all")]
-        public IActionResult GetAllDepartments()
+        public ActionResult<List<DepartmentDto>> GetAllDepartments()
         {
-            return Ok(_departmentRepository.GetAll());
+
+            _logger.LogInformation("Все департаменты получены");
+            return Ok(_departmentRepository.GetAll().Select(department => new DepartmentDto
+            {
+                Id = department.Id,
+                Description = department.Description
+            }).ToList());
         }
 
         [HttpGet("get/{id}")]
-        public IActionResult GetById([FromRoute] Guid id)
+        public ActionResult<DepartmentDto> GetById([FromRoute] Guid id)
         {
-            return Ok(_departmentRepository.GetById(id));
+            var department = _departmentRepository.GetById(id);
+            _logger.LogInformation($"Получен департамент №: {id}");
+            return Ok(new DepartmentDto
+            {
+                Id = department.Id,
+                Description = department.Description
+            });
         }
 
         #endregion

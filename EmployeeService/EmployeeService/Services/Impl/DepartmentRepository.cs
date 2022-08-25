@@ -1,4 +1,5 @@
-﻿using EmployeeService.Models;
+﻿using EmployeeService.Data;
+using EmployeeService.Models;
 
 namespace EmployeeService.Services.Impl
 {
@@ -6,27 +7,30 @@ namespace EmployeeService.Services.Impl
     {
         public int Create(Department data)
         {
-            throw new NotImplementedException();
+            return 1;
+            //throw new NotImplementedException();
         }
 
         public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public IList<Department> GetAll()
         {
-            throw new NotImplementedException();
+            return new List<Department>();
+            //throw new NotImplementedException();
         }
 
         public Department GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return new Department();
+            //throw new NotImplementedException();
         }
 
         public void Update(Department data)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
