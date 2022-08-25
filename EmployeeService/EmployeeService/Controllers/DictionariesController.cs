@@ -1,6 +1,8 @@
-﻿using EmployeeService.Services;
+﻿using EmployeeService.Models.Options;
+using EmployeeService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace EmployeeService.Controllers
 {
@@ -8,17 +10,33 @@ namespace EmployeeService.Controllers
     [ApiController]
     public class DictionariesController : ControllerBase
     {
+        #region Services
+
+        private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IEmployeeTypeRepository _employeeTypeRepository;
 
-        public DictionariesController(IEmployeeTypeRepository employeeTypeRepository)
+        #endregion
+
+        #region Constructors
+
+        public DictionariesController(IOptions<LoggerOptions> loggerOptions, IEmployeeTypeRepository employeeTypeRepository)
         {
             _employeeTypeRepository = employeeTypeRepository;
-        }   
+            _loggerOptions = loggerOptions;
+        }
+
+        #endregion
+
+        #region Public Methods
 
         [HttpGet("employee-types/all")]
         public IActionResult GetAllEmployeeTypes()
         {
             return Ok(_employeeTypeRepository.GetAll());
         }
+
+        #endregion
+
+
     }
 }

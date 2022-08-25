@@ -1,7 +1,9 @@
-﻿using EmployeeService.Models.Requests;
+﻿using EmployeeService.Models.Options;
+using EmployeeService.Models.Requests;
 using EmployeeService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace EmployeeService.Controllers
 {
@@ -9,12 +11,24 @@ namespace EmployeeService.Controllers
     [ApiController]
     public class EmployeeTypeController : ControllerBase
     {
+        #region Services
+
+        private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IEmployeeTypeRepository _employeeTypeRepository;
 
-        EmployeeTypeController(IEmployeeTypeRepository employeeTypeRepository)
+        #endregion
+
+        #region Constructors
+
+        EmployeeTypeController(IOptions<LoggerOptions> loggerOptions, IEmployeeTypeRepository employeeTypeRepository)
         {
             _employeeTypeRepository = employeeTypeRepository;
+            _loggerOptions = loggerOptions;
         }
+
+        #endregion
+
+        #region Public Methods
 
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreateEmployeeTypeRequest request)
@@ -36,5 +50,9 @@ namespace EmployeeService.Controllers
         {
             return Ok(_employeeTypeRepository.GetById(id));
         }
+
+        #endregion
+
+
     }
 }

@@ -1,7 +1,9 @@
-﻿using EmployeeService.Models.Requests;
+﻿using EmployeeService.Models.Options;
+using EmployeeService.Models.Requests;
 using EmployeeService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace EmployeeService.Controllers
 {
@@ -9,12 +11,24 @@ namespace EmployeeService.Controllers
     [ApiController]
     public class DepartmentController : ControllerBase
     {
+        #region Services
+
+        private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IDepartmentRepository _departmentRepository;
 
-        public DepartmentController (IDepartmentRepository departmentRepository)
+        #endregion
+
+        #region Constructors
+
+        public DepartmentController(IOptions<LoggerOptions> loggerOptions, IDepartmentRepository departmentRepository)
         {
             _departmentRepository = departmentRepository;
+            _loggerOptions = loggerOptions;
         }
+
+        #endregion
+
+        #region Public Methods
 
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreateDepartmentRequest request)
@@ -36,5 +50,8 @@ namespace EmployeeService.Controllers
         {
             return Ok(_departmentRepository.GetById(id));
         }
+
+        #endregion
+
     }
 }
