@@ -34,17 +34,18 @@ namespace EmployeeService.Controllers
 
         #region Public Methods
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] CreateDepartmentRequest request)
+        [HttpPost("department/create")]
+        public ActionResult<int> Create(string description)
         {
+
             _logger.LogInformation("Департамент создан");
             return Ok(_departmentRepository.Create(new Department
             {
-                Description = request.Description
-            }));
+                Description = description
+            })); ;
         }
 
-        [HttpGet("get/all")]
+        [HttpGet("department/all")]
         public ActionResult<List<DepartmentDto>> GetAllDepartments()
         {
 
@@ -56,8 +57,8 @@ namespace EmployeeService.Controllers
             }).ToList());
         }
 
-        [HttpGet("get/{id}")]
-        public ActionResult<DepartmentDto> GetById([FromRoute] Guid id)
+        [HttpGet("department/{id}")]
+        public ActionResult<DepartmentDto> GetById([FromRoute] int id)
         {
             var department = _departmentRepository.GetById(id);
             _logger.LogInformation($"Получен департамент №: {id}");
@@ -66,6 +67,14 @@ namespace EmployeeService.Controllers
                 Id = department.Id,
                 Description = department.Description
             });
+        }
+
+        [HttpDelete("department/delete")]
+        public IActionResult DeleteEmployeeTypes(int id)
+        {
+            _departmentRepository.Delete(id);
+            _logger.LogInformation("Запись удалена");
+            return Ok();
         }
 
         #endregion

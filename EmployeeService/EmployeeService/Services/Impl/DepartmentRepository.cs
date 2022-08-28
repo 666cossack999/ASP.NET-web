@@ -1,36 +1,63 @@
 ﻿using EmployeeService.Data;
-using EmployeeService.Models;
 
 namespace EmployeeService.Services.Impl
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        public int Create(Department data)
+
+        #region Services
+
+        private readonly EmployeeServiceDbContext _context;
+
+        #endregion
+
+
+        #region Constructor
+
+        public DepartmentRepository(EmployeeServiceDbContext context)
         {
-            return 1;
-            //throw new NotImplementedException();
+            _context = context;
         }
 
-        public void Delete(Guid id)
+        #endregion
+
+        public int Create(Department data)
         {
-            //throw new NotImplementedException();
+            _context.Departments.Add(data);
+            _context.SaveChanges();
+            return data.Id;
+        }
+
+        public void Delete(int id)
+        {
+            Department department = GetById(id);
+            if (department == null)
+                throw new Exception("Department не найден");
+
+            _context.Departments.Remove(department);
+            _context.SaveChanges();
         }
 
         public IList<Department> GetAll()
         {
-            return new List<Department>();
-            //throw new NotImplementedException();
+            return _context.Departments.ToList();
         }
 
-        public Department GetById(Guid id)
+        public Department GetById(int id)
         {
-            return new Department();
-            //throw new NotImplementedException();
+            return _context.Departments.FirstOrDefault(et => et.Id == id);
         }
 
         public void Update(Department data)
         {
-            //throw new NotImplementedException();
+            if (data == null)
+                throw new Exception("Department is null");
+
+            Department department = GetById(data.Id);
+
+            department.Description = data.Description;
+            _context.SaveChanges();
+
         }
     }
 }

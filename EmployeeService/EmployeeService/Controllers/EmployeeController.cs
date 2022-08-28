@@ -34,22 +34,22 @@ namespace EmployeeService.Controllers
 
         #region Public Methods
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] CreateEmployeeRequest request)
+        [HttpPost("employee/create")]
+        public ActionResult<int> Create(int departmentId, int employeeTypeId, string firstName, string surname, string patronumic, decimal salary)
         {
             _logger.LogInformation("Сотрудник создан");
             return Ok(_employeeRepository.Create(new Employee
             {
-                DepartmentId = request.DepartmentId,
-                EmployeeTypeId = request.EmployeeTypeId,
-                FirstName = request.FirstName,
-                Patronymic = request.Patronymic,
-                Salary = request.Salary,
-                Surname = request.Surname
+                DepartmentId = departmentId,
+                EmployeeTypeId = employeeTypeId,
+                FirstName = firstName,
+                Patronymic = patronumic,
+                Salary = salary,
+                Surname = surname
             }));
         }
 
-        [HttpGet("get/all")]
+        [HttpGet("employee/all")]
         public ActionResult<List<EmployeeDto>> GetAllEmployees()
         {
             _logger.LogInformation("Получены все сотрудники");
@@ -65,7 +65,7 @@ namespace EmployeeService.Controllers
             }).ToList());
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("employee/{id}")]
         public ActionResult<EmployeeDto> GetById([FromRoute] int id)
         {
             var employee = _employeeRepository.GetById(id);
@@ -80,8 +80,14 @@ namespace EmployeeService.Controllers
                 Salary = employee.Salary,
                 Surname = employee.Surname
             });
+        }
 
-            
+        [HttpDelete("employee/delete")]
+        public IActionResult DeleteEmployeeTypes(int id)
+        {
+            _employeeRepository.Delete(id);
+            _logger.LogInformation("Запись удалена");
+            return Ok();
         }
 
         #endregion
