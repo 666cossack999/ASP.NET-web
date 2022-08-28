@@ -1,7 +1,9 @@
+using EmployeeService.Data;
 using EmployeeService.Models.Options;
 using EmployeeService.Services;
 using EmployeeService.Services.Impl;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 
 namespace EmployeeService
@@ -37,6 +39,15 @@ namespace EmployeeService
                 logging.ClearProviders();
                 logging.AddConsole();
             }).UseNLog(new NLogAspNetCoreOptions() { RemoveLoggerFactoryFilter = true });
+
+            #endregion
+
+            #region Configure EF DBContext Service (EmployeeDatabase Database)
+
+            builder.Services.AddDbContext<EmployeeServiceDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration["Settings:DatabaseOptions:ConnectionString"]);
+            });
 
             #endregion
 
