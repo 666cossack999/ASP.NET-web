@@ -51,6 +51,8 @@ namespace EmployeeService
 
             #endregion
 
+            builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+
             // Add services to the container.
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IEmployeeTypeRepository, EmployeeTypeRepository>();
