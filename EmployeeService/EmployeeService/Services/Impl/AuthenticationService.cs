@@ -11,7 +11,7 @@ namespace EmployeeService.Services.Impl
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private const string SecretKey = "Fz8wMguqN2DGWiD1ICvRxQ==";
+        public const string SecretKey = "Fz8wMguqN2DGWiD1ICvRxQ==";
 
         private Dictionary<string, SessionDto> _sessions = new Dictionary<string, SessionDto>();
 
@@ -28,7 +28,38 @@ namespace EmployeeService.Services.Impl
 
         public SessionDto GetSession(string sessionToken)
         {
-            throw new NotImplementedException();
+            SessionDto sessionDto;
+            lock (_sessions)
+            {
+                _sessions.TryGetValue(sessionToken, out sessionDto);
+            }
+
+            if (sessionDto == null)
+            {
+                using IServiceScope scope = _serviceScopeFactory.CreateScope();
+                EmployeeServiceDbContext context = scope.ServiceProvider.GetRequiredService<EmployeeServiceDbContext>();
+
+                AccountSession session = context
+                    .AccountSessions
+                    .FirstOrDefault(item => item.SessionToken == sessionToken);
+
+                if (session == null)
+                    return null;
+
+                Account account = context.Accounts.FirstOrDefault(item => item.AccountId == session.AccountId);
+
+                sessionDto = GetSessionDto(account, session);
+
+                if (sessionDto != null)
+                {
+                    lock (_sessions)
+                    {
+                        _sessions[sessionToken] = sessionDto;
+                    }
+                }
+            }
+
+            return sessionDto;
         }
 
         public AuthenticationResponse Login(AuthenticationRequest authenticationRequest)
