@@ -142,7 +142,9 @@ namespace EmployeeService
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseHttpLogging();
 

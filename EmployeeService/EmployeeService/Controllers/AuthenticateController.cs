@@ -2,12 +2,14 @@
 using EmployeeService.Models.Requests;
 using EmployeeService.Models.Responses;
 using EmployeeService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 
 namespace EmployeeService.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticateController : ControllerBase
@@ -18,6 +20,8 @@ namespace EmployeeService.Controllers
 
         #endregion
 
+        #region Constructors
+
         public AuthenticateController(IAuthenticationService authenticationService)
         {
 
@@ -25,6 +29,11 @@ namespace EmployeeService.Controllers
 
         }
 
+        #endregion
+
+        #region Public Methods
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
@@ -60,5 +69,8 @@ namespace EmployeeService.Controllers
             }
             return Unauthorized();
         }
+
+        #endregion
+    
     }
 }
