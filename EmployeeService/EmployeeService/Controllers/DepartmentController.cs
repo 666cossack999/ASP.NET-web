@@ -3,6 +3,8 @@ using EmployeeService.Models;
 using EmployeeService.Models.Options;
 using EmployeeService.Models.Requests;
 using EmployeeService.Services;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +22,18 @@ namespace EmployeeService.Controllers
         private readonly ILogger<DepartmentController> _logger;
         private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IValidator<CreateDepartmentRequest> _createDepartmentRequestValidator;
 
         #endregion
 
         #region Constructors
 
-        public DepartmentController(ILogger<DepartmentController> logger, IOptions<LoggerOptions> loggerOptions, IDepartmentRepository departmentRepository)
+        public DepartmentController(ILogger<DepartmentController> logger, IOptions<LoggerOptions> loggerOptions, IDepartmentRepository departmentRepository, IValidator<CreateDepartmentRequest> createDepartmentRequestValidator)
         {
             _departmentRepository = departmentRepository;
             _loggerOptions = loggerOptions;
             _logger = logger;
+            _createDepartmentRequestValidator = createDepartmentRequestValidator;
         }
 
         #endregion
@@ -39,7 +43,6 @@ namespace EmployeeService.Controllers
         [HttpPost("department/create")]
         public ActionResult<int> Create(string description)
         {
-
             _logger.LogInformation("Департамент создан");
             return Ok(_departmentRepository.Create(new Department
             {

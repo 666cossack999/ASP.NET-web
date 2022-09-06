@@ -3,6 +3,7 @@ using EmployeeService.Models;
 using EmployeeService.Models.Options;
 using EmployeeService.Models.Requests;
 using EmployeeService.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +21,18 @@ namespace EmployeeService.Controllers
         private readonly ILogger<EmployeeController> _logger;
         private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IValidator<CreateEmployeeRequest> _createEmployeeRequest
 
         #endregion
 
         #region Constructors
 
-        public EmployeeController(ILogger<EmployeeController> logger ,IOptions<LoggerOptions> loggerOptions, IEmployeeRepository employeeRepository)
+        public EmployeeController(ILogger<EmployeeController> logger ,IOptions<LoggerOptions> loggerOptions, IEmployeeRepository employeeRepository, IValidator<CreateEmployeeRequest> createEmployeeRequest)
         {
             _employeeRepository = employeeRepository;
             _loggerOptions = loggerOptions;
             _logger = logger;
+            _createEmployeeRequest = createEmployeeRequest;
         }
 
         #endregion

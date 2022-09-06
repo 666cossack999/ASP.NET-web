@@ -7,7 +7,14 @@ namespace EmployeeService.Models.Validators
     {
         public AuthenticationRequestValidator()
         {
-            RuleFor(x => )
+            RuleFor(x => x.Login)
+                .NotNull()
+                .Length(7, 255)
+                .EmailAddress();
+
+            RuleFor(x => x.Password)
+                .NotNull()
+                .Length(5, 30);
         }
     }
 }

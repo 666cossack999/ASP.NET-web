@@ -1,6 +1,7 @@
 using EmployeeService.Data;
 using EmployeeService.Models.Options;
 using EmployeeService.Models.Requests;
+using EmployeeService.Models.Validators;
 using EmployeeService.Services;
 using EmployeeService.Services.Impl;
 using FluentValidation;
@@ -99,7 +100,10 @@ namespace EmployeeService
 
             #region Configure FluentValidator
 
-            // builder.Services.AddScoped<IValidator<AuthenticationRequest>, AuthenticationRequestValidator>();
+            builder.Services.AddScoped<IValidator<AuthenticationRequest>, AuthenticationRequestValidator>();
+            builder.Services.AddScoped<IValidator<CreateDepartmentRequest>, CreateDepartmentRequestValidator>();
+            builder.Services.AddScoped<IValidator<CreateEmployeeRequest>, CreateEmployeeRequestValidator>();
+            builder.Services.AddScoped<IValidator<CreateEmployeeTypeRequest>, CreateEmployeeTypeRequestValidator>();
 
             #endregion  
 

@@ -2,6 +2,8 @@
 using EmployeeService.Models.Requests;
 using EmployeeService.Models.Responses;
 using EmployeeService.Services;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -17,16 +19,17 @@ namespace EmployeeService.Controllers
         #region Services
 
         private readonly IAuthenticationService _authenticationService;
+        private readonly IValidator<AuthenticationRequest> _authenticationRequestValidator;
 
         #endregion
 
         #region Constructors
 
-        public AuthenticateController(IAuthenticationService authenticationService)
+        public AuthenticateController(IAuthenticationService authenticationService, IValidator<AuthenticationRequest> authenticationRequestValidator)
         {
 
             _authenticationService = authenticationService;
-
+            _authenticationRequestValidator = authenticationRequestValidator;
         }
 
         #endregion
@@ -39,6 +42,12 @@ namespace EmployeeService.Controllers
         [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
         public IActionResult Login([FromBody] AuthenticationRequest authenticationRequest)
         {
+            ValidationResult validationResult = _authenticationRequestValidator.Validate(authenticationRequest);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.ToDictionary());
+            }
+
             AuthenticationResponse authenticationResponse = _authenticationService.Login(authenticationRequest);
             if (authenticationResponse.Status == Models.AuthenticationStatus.Success)
             {
