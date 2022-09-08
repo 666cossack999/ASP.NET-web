@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeService.Data", "Emp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtSample", "JwtSample\JwtSample.csproj", "{1FA68DE5-F7DB-4169-9216-3A1B7FDCAD80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountHelper", "AccountHelper\AccountHelper.csproj", "{2D135664-6370-4838-B744-41BAA3370A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountHelper", "AccountHelper\AccountHelper.csproj", "{2D135664-6370-4838-B744-41BAA3370A7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

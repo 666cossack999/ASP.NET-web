@@ -62,7 +62,7 @@ namespace EmployeeService.Controllers
         }
 
         [HttpPost("employee-types/create")]
-        public ActionResult<int> CreateEmployeeTypes(string description)
+        public ActionResult<int> CreateEmployeeType(string description)
         {
             _logger.LogInformation("Добавлена запись");
             return Ok(_employeeTypeRepository.Create(new Data.EmployeeType
@@ -73,7 +73,7 @@ namespace EmployeeService.Controllers
 
 
         [HttpDelete("employee-types/delete")]
-        public IActionResult DeleteEmployeeTypes(int id)
+        public IActionResult DeleteEmployeeType(int id)
         {
             _employeeTypeRepository.Delete(id);
             _logger.LogInformation("Запись удалена");

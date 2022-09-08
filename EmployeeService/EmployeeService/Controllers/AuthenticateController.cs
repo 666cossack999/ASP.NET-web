@@ -27,7 +27,6 @@ namespace EmployeeService.Controllers
 
         public AuthenticateController(IAuthenticationService authenticationService, IValidator<AuthenticationRequest> authenticationRequestValidator)
         {
-
             _authenticationService = authenticationService;
             _authenticationRequestValidator = authenticationRequestValidator;
         }

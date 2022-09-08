@@ -21,7 +21,7 @@ namespace EmployeeService.Controllers
         private readonly ILogger<EmployeeController> _logger;
         private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IValidator<CreateEmployeeRequest> _createEmployeeRequest
+        private readonly IValidator<CreateEmployeeRequest> _createEmployeeRequest;
 
         #endregion
 
