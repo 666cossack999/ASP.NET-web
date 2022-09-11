@@ -96,6 +96,8 @@ namespace EmployeeService.Services.Impl
                 IsClosed = false,
             };
 
+
+
             context.AccountSessions.Add(session);
             context.SaveChanges();
 

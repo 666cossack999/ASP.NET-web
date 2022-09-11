@@ -45,8 +45,12 @@ namespace EmployeeService.Services.Impl
 
         public override Task<GetByIdResponse> GetById(GetByIdRequest request, ServerCallContext context)
         {
-            _employeeTypeRepository.GetById(request.Id);
-            return Task.FromResult
+            var res = _employeeTypeRepository.GetById(request.Id);
+            GetByIdResponse response = new GetByIdResponse();
+            response.EmployeeType.Id = res.Id;
+            response.EmployeeType.Description = res.Description;
+
+            return Task.FromResult(response);
             
         }
     }
